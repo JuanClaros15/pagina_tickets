@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <script src="https://kit.fontawesome.com/41e6259da8.js" crossorigin="anonymous"></script>
+    <meta name="description" content="pagina de ticketks">
+    <title>Pagina Principal</title>
+    <link rel="stylesheet" href="../static/pagina.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+</head>
+
+<body>
+    <header class="seccion-superior">
+        <div class="contenedor-superior">
+            <h1>Bienvenido <strong>{{ username }}</strong> </h1>
+            <div class="contenedor-boton">
+                <button class="btn" id="añadir-ticket">Agregar Ticket <i class="fas fa-ticket-alt"></i></button>
+                <form method="POST"  action="{{ url_for('logout') }}">
+                    <button class="cerrar-sesion" type="submit"><i class="fa-solid fa-right-to-bracket"></i></button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <div class="contenedor-ordenamiento">
+        <h2>Tus Tickets, Ordénalos Por </h2>
+        <div class="selectores">
+            <h2>Fecha de Creacion:</h2>
+            <div class="custom-select">
+                <select id="ordenar-fecha" class="ordenar-fecha">
+                    <option value="1">Descendente</option>
+                    <option value="2">Ascendente</option>
+                </select>
+            </div>
+            <h2>Estado:</h2>
+            <div class="custom-select">
+                <select id="ordenar-estado" class="ordenar-estado">
+                    <option value=""> Selecciona una opción </option>
+                    <option value="1"> En Curso </option>
+                    <option value="2"> Finalizado </option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="contenedor-tickets" id="contenedor-tickets">
+        <p id="mensaje-no-tickets"class="mensaje-no-tickets" style="display: none;">No tienes tickets disponibles.</p>
+    </div>
+    <div class="contenedor-tickets" id="contenedor-tickets"></div>
+    
+    <div id="ventana-info" class="ventana-emergente">
+        <div class="contenido-ventana">
+            <span class="close" onclick="cerrar_ventana_emergente()">&times;</span>
+            <h2>Más información relacionada al ticket</h2><br><br>
+            <div id="info-ticket">
+                <p><strong>Titulo:</strong> </p>
+                <p><strong>Descripción del Problema:</strong> </p>
+                <p><strong>Estado:</strong> </p>
+                <p><strong>Complejidad:</strong> </p>
+                <p><strong>Usuario:</strong> </p>
+                <p><strong>Email:</strong> </p>
+                <p><strong>Fecha De Creacion:</strong> </p>
+            </div>
+            <button id="finish-button" class="opcion-ticket" onclick="cerrar_ticket()">Finalizar Ticket</button>
+            <button class="opcion-ticket" onclick="borrar_ticket()">Eliminar Ticket</button>
+        </div>
+    </div>
+
+    <div id="ventana-agregar" class="ventana-emergente">
+        <div class="contenido-ventana">
+            <span class="close" onclick="cerrar_ventana_agregar()">&times;</span>
+            <h2>Agregar Nuevo Ticket</h2><br>
+            <form id="formulario-agregar" class="formulario-agregar">
+                <p><strong>Titulo:</strong> </p>
+                <input type="text" id="titulo" name="titulo" maxlength="35" required autocomplete="off"><br>
+            
+                <p><strong>Descripción del Problema:</strong> </p>
+                <textarea id="descripcion" name="descripcion" rows="4" maxlength="1000" required autocomplete="off"></textarea><br>
+                <p><strong>Complejidad:</strong> </p>
+                <select id="prioridad" class="select-complejidad">
+                    <option value="baja">Baja</option>
+                    <option value="media">Media</option>
+                    <option value="alta">Alta</option>
+                </select><br>
+                <button type="submit" class="crear-ticket" id="crear-ticket">Crear Ticket</button>
+            </form>
+        </div>
+    </div>
+    <script>
+
+        // Cargar tickets al inicio
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/tickets')
+                .then(response => response.json())
+                .then(data => {
+                    botones_info = data;
+                    if (botones_info.length === 0) {
+                        document.getElementById('mensaje-no-tickets').style.display = 'block';
+                    } else {
+                        generar_botones();
+                    }
+                });
+        });
+
+
+        // Función para generar dinámicamente los botones de tickets
+        function generar_botones() {
+            const contenedor_botones = document.getElementById('contenedor-tickets');
+            contenedor_botones.innerHTML = '';
+
+            botones_info.forEach(boton => {
+                const nuevo_boton = document.createElement('button');
+                nuevo_boton.textContent = boton.titulo;
+                nuevo_boton.className = 'boton';
+                nuevo_boton.addEventListener('click', function() {
+                    mostrar_ventana_emergente(boton);
+                });
+
+                const usuario = document.createElement('div');
+                usuario.textContent = boton.usuario;
+                usuario.className = 'usuario-boton';
+
+                const estado_ticket = document.createElement('div');
+                estado_ticket.textContent = boton.estado;
+                estado_ticket.className = 'estado-ticket-boton';
+
+                const fecha_creacion = document.createElement('div');
+                fecha_creacion.textContent = boton.fecha_creacion;
+                fecha_creacion.className = 'fecha-creacion-boton';
+
+                nuevo_boton.appendChild(usuario);
+                nuevo_boton.appendChild(estado_ticket);
+                nuevo_boton.appendChild(fecha_creacion);
+                contenedor_botones.appendChild(nuevo_boton);
+            });
+        }
+
+        // Función para ordenar los tickets
+        function ordenar_tickets() {
+            const orden_fecha = document.getElementById('ordenar-fecha').value;
+            const orden_estado = document.getElementById('ordenar-estado').value;
+
+            // Convertir fecha_creacion a formato Date
+            botones_info.forEach(ticket => {
+                ticket.fecha_creacion_obj = convertirFecha(ticket.fecha_creacion);
+            });
+
+            // Ordenar por fecha
+            botones_info.sort((a, b) => {
+                if (orden_fecha === '2') { 
+                    return a.fecha_creacion_obj - b.fecha_creacion_obj;
+                } else if (orden_fecha === '1') { 
+                    return b.fecha_creacion_obj - a.fecha_creacion_obj;
+                }
+                return 0;
+            });
+
+            // Ordenar por estado
+            if (orden_estado === '1') { 
+                botones_info = botones_info.filter(ticket => ticket.estado === 'en curso').concat(
+                    botones_info.filter(ticket => ticket.estado !== 'en curso')
+                );
+            } else if (orden_estado === '2') {
+                botones_info = botones_info.filter(ticket => ticket.estado === 'finalizado').concat(
+                    botones_info.filter(ticket => ticket.estado !== 'finalizado')
+                );
+            }
+            // Limpiar la propiedad temporal fecha_creacion_obj
+            botones_info.forEach(ticket => {
+                delete ticket.fecha_creacion_obj;
+            });
+
+            generar_botones();
+        }
+        //Funcion para convertir las horas
+        function convertirFecha(fecha) {
+            const partes = fecha.split(' ');
+            const fechaPartes = partes[0].split('/').reverse().join('-');
+            return new Date(`${fechaPartes}T${partes[1]}`);
+        }
+        // Función para mostrar la ventana con la información del ticket
+        function mostrar_ventana_emergente(ticket) {
+            var ventana_emergente = document.getElementById('ventana-info');
+            var info_ticket = document.getElementById('info-ticket');
+            var finish_button = document.getElementById('finish-button');
+            selectedTicketId = ticket.id_ticket;
+            info_ticket.innerHTML = `
+                <p><strong>Titulo:</strong> ${ticket.titulo} </p>
+                <p><strong>Descripción del Problema:</strong> ${ticket.descripcion}</p>
+                <p><strong>Estado:</strong> ${ticket.estado}</p>
+                <p><strong>Prioridad:</strong> ${ticket.prioridad}</p>
+                <p><strong>Usuario:</strong> ${ticket.usuario}</p>
+                <p><strong>Email:</strong> ${ticket.mail}</p>
+                <p><strong>Fecha De Creación:</strong> ${ticket.fecha_creacion}</p>
+            `;
+
+            ventana_emergente.style.display = 'block';
+
+            // Manejar visibilidad de los botones
+            if (ticket.estado === 'finalizado') {
+                finish_button.style.display = 'none'; // Ocultar botón si el estado es finalizado
+            } else {
+                finish_button.style.display = 'inline-block'; // Mostrar botón si el estado no es finalizado
+            }
+        }
+
+        // Función para cerrar la ventana
+        function cerrar_ventana_emergente() {
+            var ventana_emergente = document.getElementById('ventana-info');
+            ventana_emergente.style.display = 'none';
+        }
+
+        // Función para mostrar la ventana de agregar ticket
+        function mostrar_ventana_agregar() {
+            var ventana_agregar = document.getElementById('ventana-agregar');
+            ventana_agregar.style.display = 'block';
+        }
+
+        // Función para cerrar la ventana de agregar ticket
+        function cerrar_ventana_agregar() {
+            var ventana_agregar = document.getElementById('ventana-agregar');
+            ventana_agregar.style.display = 'none';
+        }
+
+        // Event listener para el botón "Agregar Ticket"
+        document.querySelector('#añadir-ticket').addEventListener('click', function() {
+            mostrar_ventana_agregar();
+        });
+
+        // Función para manejar el envío del formulario de agregar ticket
+        document.getElementById('formulario-agregar').addEventListener('submit', function(event) {
+            event.preventDefault(); 
+
+            var titulo = document.getElementById('titulo').value;
+            var descripcion = document.getElementById('descripcion').value;
+            var prioridad = document.getElementById('prioridad').value;
+
+            fetch('/ticket', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    titulo: titulo,
+                    descripcion: descripcion,
+                    prioridad: prioridad
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error en la creación del ticket');
+                }
+                return response.json();
+            })
+            .then(data => {
+
+                console.log('Ticket creado:', data);
+                cerrar_ventana_agregar();
+                fetch('/tickets')
+                    .then(response => response.json())
+                    .then(data => {
+                        botones_info = data;
+                        generar_botones();
+                    });
+                document.getElementById('formulario-agregar').reset();
+            })
+            .catch(error => {
+                console.error('Error al crear el ticket:', error);
+                alert('Error al crear el ticket. Revisa la consola para más detalles.');
+            });
+        });
+
+        // Función para finalizar ticket
+        function cerrar_ticket() {
+            var ticketId = selectedTicketId; 
+            fetch(`/ticket/${ticketId}/close`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al finalizar el ticket');
+                }
+                return response.json();
+            })
+            .then(() => {
+                location.reload(); 
+            })
+            .catch(error => {
+                console.error('Error al finalizar el ticket:', error);
+                alert('Error al finalizar el ticket. Revisa la consola para más detalles.');
+            });
+        }
+
+        // Función para eliminar ticket
+        function borrar_ticket() {
+            var ticketId = selectedTicketId; 
+            fetch(`/ticket/${ticketId}`, {
+                method: 'DELETE'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al eliminar el ticket');
+                }
+                return response.json();
+            })
+            .then(() => {
+                location.reload(); 
+            })
+            .catch(error => {
+                console.error('Error al eliminar el ticket:', error);
+                alert('Error al eliminar el ticket. Revisa la consola para más detalles.');
+            });
+        }
+
+        // Event listeners para los select de ordenamiento
+        document.getElementById('ordenar-fecha').addEventListener('change', ordenar_tickets);
+        document.getElementById('ordenar-estado').addEventListener('change', ordenar_tickets);
+    </script>
+</body>
+</html>

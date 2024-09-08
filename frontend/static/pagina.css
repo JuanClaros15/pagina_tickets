@@ -1,0 +1,357 @@
+*{
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    background-color: #b0c4de;
+}
+
+h1{
+    color: white;
+}
+
+
+h2 {
+    margin-top: 0;
+}
+
+select {
+    width: 300px;
+    font-size: 16px;
+    color: white;
+    border: 1px solid black;
+    border-radius: 5px;
+    appearance: none; 
+    outline: none;
+    background-color: #2957b9;
+    background-image: linear-gradient(45deg, transparent 50%, #ccc 50%),
+                      linear-gradient(135deg, #ccc 50%, transparent 50%);
+    background-position: calc(100% - 20px) calc(1em + 2px),
+                         calc(100% - 15px) calc(1em + 2px);
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+    text-align: center;
+    text-align-last: center;
+}
+
+option{
+    text-align: center;
+}
+
+input[type="text"], textarea {
+    width: 300px;
+    padding: 10px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+textarea {
+    height: 150px;
+    resize: none; 
+}
+
+input[type="text"]:focus, textarea:focus {
+    border-color: dodgerblue;
+}
+
+header{
+    display: flex;
+    justify-content: top;
+    align-items: left;
+    width: 100%;
+    min-height: flex;
+}
+
+i{
+    position: flex;
+    color: white;
+    font-size: 2rem;
+    top: 19px;
+    right: 8px;
+}
+
+
+/* PARA DEL BOTON DE AGREGAR TICKETS*/
+.contenedor-superior{
+    padding: 0px 10px 0px 10px;
+    position: relative;
+    width: 100%;
+    background-color: #003366;
+    border: 2px solid black;
+    border-radius: 2px;
+    height: 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.contenedor-superior strong{
+    font-weight: bold;
+    text-transform: capitalize;
+    font-size: 2.2rem;
+}
+
+.contenedor-superior button{
+    padding: 10px;
+    height: 2.5em;
+    width: auto;
+    border-radius: 40px;
+    background: #2957b9;
+    border: 2px solid black;
+    font-weight: bold;
+    cursor: pointer;
+    outline: none;
+    font-size: 1.4rem;
+    transition: .4s;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.contenedor-superior i{
+    padding: 5px;
+    font-size: 1.2em;
+}
+.contenedor-boton button:hover,
+.contenedor-boton button :focus{
+    background-color: #17238d;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.contenedor-boton{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.contenedor-boton .cerrar-sesion{
+    background-color: #e30b0b;
+    text-decoration: none;
+    cursor: pointer;
+    margin-left: 5px;
+}
+.contenedor-boton .cerrar-sesion:hover,
+.contenedor-boton .cerrar-sesion:focus{
+    background-color: #880d0d;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+
+/*METODOS DE ORDENAMIENTO*/
+.contenedor-ordenamiento{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    height: 70px;
+}
+
+.selectores{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.selectores h2{
+    margin: 0px 10px;
+}
+.custom-select{
+    position: relative;
+    display: inline-block;
+}
+.custom-select::after{
+    content: '\25BC'; 
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    pointer-events: none; 
+    font-size: 12px; 
+    color: white;
+}
+
+.selectores select{
+    height: 40px;
+    font-size: 1.5em;
+    border: 2px solid black;
+    background-image: none;
+}
+
+
+/*CONTENEDOR DE TICKETS*/
+
+.contenedor-tickets {
+    width: calc(100% - 20px);
+    height: calc(100% - 20px);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 10px;
+}
+
+.contenedor-tickets button {
+    position: relative;
+    height: 200px;
+    align-self: center;
+    border-radius: 25px;
+    background: #957af7;
+    border: 2px solid black;
+    font-weight: bold;
+    cursor: pointer;
+    outline: none;
+    font-size: 2rem;
+    transition: .4s;
+    color: black;
+    padding: 10px;
+}
+
+.boton:hover,
+.boton:focus {
+    background-color: #7c58fc;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.contenedor-tickets button .usuario-boton,
+.contenedor-tickets button .estado-ticket-boton,
+.contenedor-tickets button .fecha-creacion-boton {
+    position: absolute; /* Posiciona los elementos dentro del botón */
+    font-size: 1.5rem;
+    color: black;
+}
+
+.contenedor-tickets button .usuario-boton {
+    top: 10px;
+    left: 10px;
+}
+
+.contenedor-tickets button .estado-ticket-boton {
+    bottom: 10px;
+    left: 10px;
+}
+
+.contenedor-tickets button .fecha-creacion-boton {
+    bottom: 10px;
+    right: 10px;
+}
+
+
+.mensaje-no-tickets{
+    font-weight: bold;
+    font-size: 50px;
+}
+
+/*VENTANAS EMERGENTES*/
+
+.ventana-emergente {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border: 2px solid black;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+    max-width: 80%;
+    max-height: 80%;
+    overflow-y: auto;
+}
+
+.contenido-ventana {
+    text-align: left;
+}
+
+#info-ticket {
+    margin-bottom: 20px;
+}
+
+#info-ticket p {
+    margin: 5px 0;
+    font-size: 1.5em;
+}
+
+.opcion-ticket {
+    background-color: black;
+    color: white;
+    border: 2px solid black;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: .2s;
+    margin-right: 20px;
+}
+
+.formulario-agregar{
+    display: flex;
+    flex-direction: column;
+}
+.formulario-agregar p{
+    margin: 5px;
+}
+
+.crear-ticket {
+    background-color: black;
+    color: white;
+    border: 2px solid black;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: .2s;
+    margin: 5px;
+}
+
+.select-complejidad {
+    border: 1px solid #ccc;
+    color: black;
+    background-color: white;
+    width: auto;
+    height: 40px;
+    margin: 5px;
+}
+
+.crear-ticket:hover,
+.crear-ticket:focus {
+    background-color: rgb(0, 218, 0);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.opcion-ticket:hover,
+.opcion-ticket:focus {
+    background-color: red;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <script src="https://kit.fontawesome.com/41e6259da8.js" crossorigin="anonymous"></script>
+    <meta name="description" content="pagina para recuperar_contraseña">
+    <title>Recuperacion de Contraseña</title>
+    <link rel="stylesheet" href="../static/login.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+</head>
+
+<body>
+    <div class="contenedor">
+        <div class="formulario">
+            <form action="{{ url_for('reset_password') }}" method="POST">
+                <div class="contenedor-h3">
+                    <h2>Recupera tu Contraseña</h2>
+                </div>
+                <div class="contenedor-input">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" name="username"  required autocomplete="off">
+                    <label for="username">Usuario</label>
+                </div>
+                <div class="contenedor-input">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="text" name="mail" required autocomplete="off">
+                    <label for="mail">Correo</label>
+                </div>
+                <div class="contenedor-input">
+                    <i class="fa-solid fa-unlock"></i>
+                    <input type="password" name="new_password" required autocomplete="off">
+                    <label for="new_password">Nueva Contraseña</label>
+                </div>
+                <button type="submit">Finalizar</button>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

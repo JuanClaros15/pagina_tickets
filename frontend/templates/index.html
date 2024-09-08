@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <script src="https://kit.fontawesome.com/41e6259da8.js" crossorigin="anonymous"></script>
+    <meta name="description" content="login para la pagina">
+    <title>Login</title>
+    <link rel="stylesheet" href="../static/login.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+</head>
+
+<body>
+    <div class="contenedor">
+        <div class="formulario">
+            <form action="{{ url_for('login') }}" method="POST" autocomplete="off">
+                <h2>Inicio de Sesion</h2>
+                
+                <div class="contenedor-input">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" name="username" id="username"  required autocomplete="off">
+                    <label for="username">Usuario</label>
+                </div>
+                <div class="contenedor-input">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" name="password" id="password"  required autocomplete="off">
+                    <label for="password">Contraseña</label>
+                </div>
+                <button type="submit">Acceder</button>
+            </form>
+            <div class="olvide-pass-user">
+                <a href="{{ url_for('reset_password') }}">Olvidé la contraseña</a>
+            </div>
+            <div class="registrar">
+                <a href="{{ url_for('register') }}">¿No tienes una cuenta? Regístrate aquí</a>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        document.getElementById('login-form').addEventListener('submit', function(event) {
+            setTimeout(() => {
+                this.reset();
+            }, 0);
+        });
+    </script>
+</body>
+</html>
