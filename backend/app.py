@@ -31,7 +31,23 @@ login_manager.login_view = 'login'
 def load_user(user_id):
     return Usuario.query.get(int(user_id))
 
-@app.route('/', methods=['GET', 'POST'])
+
+@app.route('/')
+def index():
+    return redirect(url_for('login'))
+
+@app.route('/logout',methods=['POST'])
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
+@app.route('/pagina_principal')
+@login_required
+def pagina_principal():
+    return render_template('pagina_principal.html', username=current_user.username)
+
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
@@ -45,17 +61,6 @@ def login():
             flash('Inicio de sesión fallido. Por favor, verifica tu usuario y contraseña.', 'danger')
     return render_template('index.html')
 
-@app.route('/logout',methods=['POST'])
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for(''))
-
-@app.route('/pagina_principal')
-@login_required
-def pagina_principal():
-    return render_template('pagina_principal.html', username=current_user.username)
-
 @app.route('/register', methods=['GET', 'POST'])    
 def register():
     if request.method == 'POST':
@@ -68,11 +73,11 @@ def register():
         db.session.add(new_user)
         db.session.commit()
         flash('Usuario registrado exitosamente', 'success')
-        return redirect(url_for(''))
+        return redirect(url_for('login'))
     
     return render_template('registro.html')
 
-"""
+
 @app.route('/reset_password', methods=['GET','POST'])
 def reset_password():
     if request.method == 'POST':
@@ -84,10 +89,9 @@ def reset_password():
             user.password = bcrypt.generate_password_hash(new_password).decode('utf-8')
             db.session.commit()
             flash('Tu contraseña ha sido actualizada con éxito.')
-            return redirect(url_for(''))
+            return redirect(url_for('login'))
         flash('No encontramos un usuario con ese correo y nombre de usuario.')
     return render_template('recuperar_contraseña.html')
-"""
 
 @app.route('/tickets', methods=['GET'])
 @login_required
