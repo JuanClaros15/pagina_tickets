@@ -16,7 +16,7 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 app = Flask(__name__, template_folder='../frontend/templates', static_folder='../frontend/static')  
 app.config['SECRET_KEY'] = '5432'  
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql+psycopg2://postgres:1504@localhost:5432/TP_Final'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://ticketsjuan:6UzxDePH2JRHkcQVpblyLiUkzrNPSiSB@dpg-crj0p8bv2p9s738pq4cg-a.oregon-postgres.render.com/basetickets'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
