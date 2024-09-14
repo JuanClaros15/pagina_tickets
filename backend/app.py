@@ -151,4 +151,5 @@ def delete_ticket(ticket_id):
     return jsonify({'message': 'Ticket eliminado exitosamente!'})
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port=5000)
+
